@@ -9,7 +9,15 @@ import (
 
 
 func main() {
-	// TODO: list all devices for the user (interfaces)
+	fmt.Println("your available interfaces :")
+	devices, err := pcap.FindAllDevs()
+    if err!= nil {
+        log.Fatal(err)
+    }
+    for _, d := range devices {
+        fmt.Println(d.Name)
+    }
+
 	// read the interface from the user 
 	log.Println("Enter the interface name:")
     var interfaceName string
