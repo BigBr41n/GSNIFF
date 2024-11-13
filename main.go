@@ -4,8 +4,28 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/google/gopacket"
+	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
 )
+
+func handlePackets(ps *gopacket.PacketSource){ // ps : packet source
+	for packet := range ps.Packets() {
+		tcpLayer := packet.Layer(layers.LayerTypeTCP)
+		if tcpLayer != nil {
+			tcp, _ := tcpLayer.(*layers.TCP)
+
+			// Print TCP infos
+			log.Printf("From src port: %d to dst port: %d\n", tcp.SrcPort, tcp.DstPort)
+			log.Printf("Sequence number: %d\n", tcp.Seq)
+
+			// Print the payload if available (1666 bytes)
+			if len(tcp.Payload) > 0 {
+				log.Printf("Payload: %s\n", string(tcp.Payload))
+			}
+		}
+}
+}
 
 
 func main() {
@@ -36,9 +56,9 @@ func main() {
 		log.Fatal(err)
 	}
 
-	//TODO: process all packets
-	//packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
+	//process all packets
+	packetSource := gopacket.NewPacketSource(handle, handle.LinkType())
 
 	// handle the packets 
-	//handlePackets(packetSource);
+	handlePackets(packetSource);
 }
