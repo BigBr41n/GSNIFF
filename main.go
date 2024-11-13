@@ -24,12 +24,11 @@ func handlePackets(ps *gopacket.PacketSource){ // ps : packet source
 				log.Printf("Payload: %s\n", string(tcp.Payload))
 			}
 		}
-}
+	}
 }
 
 
-func main() {
-	fmt.Println("your available interfaces :")
+func availableDevices(){
 	devices, err := pcap.FindAllDevs()
     if err!= nil {
         log.Fatal(err)
@@ -37,7 +36,13 @@ func main() {
     for _, d := range devices {
         fmt.Println(d.Name)
     }
+}
 
+
+func main() {
+	// print the available devices
+	availableDevices()
+	
 	// read the interface from the user 
 	log.Println("Enter the interface name:")
     var interfaceName string
